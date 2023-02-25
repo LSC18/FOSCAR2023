@@ -1,20 +1,23 @@
 import sys
-import heapq
+import heapq # 우선순위 큐
 
-
-heap = []
 input = sys.stdin.readline
-n = int(input())
-arr = []
-for i in range(n):
+N = int(input())
+cls = []
+for i in range(N):
     a, b = map(int, input().split())
-    arr.append([a, b])
-arr.sort(key=lambda x: x[0])
-heapq.heappush(heap, arr[0][1])  #첫번째 강의가 끝나는 시간을 넣음
-for i in range(1, n):
-    if heap[0] > arr[i][0]:
-        heapq.heappush(heap, arr[i][1])
-    else:
-        heapq.heappop(heap)
-        heapq.heappush(heap, arr[i][1])
-print(len(heap))
+    cls.append([a, b])
+
+cls.sort() # 각 강의의 시작 시간을 기준으로 정렬
+
+queue = []
+heapq.heappush(queue, cls[0][1]) # 첫 강의의 끝나는 시간 저장
+
+for i in range(1, N):
+    if cls[i][0] < queue[0]: # 기존 강의가 끝나는 시간보다 이를 때
+        heapq.heappush(queue, cls[i][1]) # 새 강의실 추가
+    else: # 기존 강의가 끝나는 시간보다 같거나 이후일 때
+        heapq.heappop(queue) # 기존 강의 시간 pop
+        heapq.heappush(queue, cls[i][1]) # 새 강의 시간 추가
+
+print(len(queue))
